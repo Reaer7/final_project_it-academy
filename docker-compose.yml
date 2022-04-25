@@ -1,0 +1,128 @@
+version: "3.9"
+
+services:
+  postgres_auth:
+    container_name: postgres_auth
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "1234"
+    volumes:
+      - ./data/auth:/var/lib/postgresql/data
+    ports:
+      - "5437:5437"
+    command:
+      -p 5437
+
+  postgres_company:
+    container_name: postgres_company
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "1234"
+    volumes:
+      - ./data/company:/var/lib/postgresql/data
+    ports:
+      - "5433:5433"
+    command:
+      -p 5433
+
+  postgres_employee:
+    container_name: postgres_employee
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "1234"
+    volumes:
+      - ./data/employee:/var/lib/postgresql/data
+    ports:
+      - "5434:5434"
+    command:
+      -p 5434
+
+  postgres_conversion:
+    container_name: postgres_conversion
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "1234"
+    volumes:
+      - ./data/conversion:/var/lib/postgresql/data
+    ports:
+      - "5435:5435"
+    command:
+      -p 5435
+
+#  auth_api:
+#    container_name: auth_api
+#    image: auth:1.0
+#    build:
+#      context: ./authorization
+#      dockerfile: Dockerfile
+#    restart: on-failure
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_auth:5437/postgres
+#    ports:
+#      - "8081:8081"
+#    depends_on:
+#      - postgres_auth
+
+#  company_api:
+#    container_name: company_api
+#    image: company:1.0
+#    build:
+#      context: ./company
+#      dockerfile: Dockerfile
+#    restart: on-failure
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_company:5433/postgres
+#      URL_SERVICE_AUTH_SESSION: http://auth_api:8081/api/v2/session
+#    ports:
+#      - "8082:8082"
+#    depends_on:
+#      - postgres_company
+#      - auth_api
+
+#  employee_api:
+#    container_name: employee_api
+#    image: employee:1.0
+#    build:
+#      context: ./employee
+#      dockerfile: Dockerfile
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_employee:5434/postgres
+#      URL_SERVICE_AUTH_SESSION: http://auth_api:8081/api/v2/session
+#      URL_SERVICE_COMPANY_LEGAL: http://company_api:8092/api/v2/legal
+#      URL_SERVICE_company_LEGALS: http://company_api:8092/api/v2/legals
+#    ports:
+#      - "8083:8083"
+#    depends_on:
+#      - postgres_employee
+#      - auth_api
+#      - company_api
+
+#  conversion_api:
+#    container_name: conversion_api
+#    image: conversion:1.0
+#    build:
+#      context: ./conversion
+#      dockerfile: Dockerfile
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_conversion:5435/postgres
+#      URL_SERVICE_AUTH_SESSION: http://auth_api:8081/api/v2/session
+#      URL_SERVICE_USER: http://auth_api:8081/api/v2/user
+#      URL_SERVICE_LEGAL: http://company_api:8092/api/v2/legal
+#      URL_SERVICE_LEGALS: http://company_api:8092/api/v2/legals
+#      URL_SERVICE_EMPLOYEES: http://employee_api:8083/api/v2/employees
+#      URL_SERVICE_EMPLOYEE: http://employee_api:8083/api/v2/employee
+#    ports:
+#      - "8084:8084"
+#    depends_on:
+#      - postgres_conversion
+#      - auth_api
+#      - company_api
+#      - employee_api
